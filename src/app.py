@@ -23,12 +23,12 @@ def find_matches():
     try:
         data = FindMatchesRequestValidator(**request.json)
     except ValidationError as e:
-        return jsonify({"error": list(e.errors())}), HTTPStatus.BAD_REQUEST
+        return jsonify(e.json()), HTTPStatus.BAD_REQUEST
 
     output_path = data.output_path or tempfile.NamedTemporaryFile(suffix='.json', dir='tmp').name
 
     matches = FaceRecognitionService.process_and_save_results(selfie_paths=data.selfie_paths,
-        folder_path=data.folder_path, output_path=output_path, model_name=data.model_name)
+        folder_path=data.folder_path, output_path=output_path, model_name=data.model_name, threshold=data.threshold)
 
     return jsonify({"output_path": output_path, "matches": matches}), HTTPStatus.OK
 

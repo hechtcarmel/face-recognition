@@ -32,16 +32,13 @@ class FaceRecognitionService:
         :return: Set of file paths that match the target images.
         """
         matches = set()
-        folder = Path(folder_path)
         for target_path in selfie_paths:
-            target = Path(target_path)
-            for file_path in folder.rglob('*'):
-                if file_path.is_file():
-                    try:
-                        if FaceRecognitionService._verify_match(target, file_path, model_name):
-                            matches.add(str(file_path))
-                    except Exception as e:
-                        logging.error(f"Error processing {file_path}: {e}")
+            try:
+                result = DeepFace.find(img_path=target_path, db_path=folder_path, model_name=model_name)
+                for match in result[0]['identity']:
+                    matches.add(match)
+            except Exception as e:
+                logging.error(f"Error processing {target_path}: {e}")
         return matches
 
     @staticmethod

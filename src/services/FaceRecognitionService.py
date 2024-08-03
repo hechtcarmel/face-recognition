@@ -14,7 +14,7 @@ class FaceRecognitionService:
 
     @staticmethod
     def process_and_save_results(selfie_paths: List[str], folder_path: str, output_path: str,
-                                 model_name: ModelType = 'Facenet') -> list[str]:
+                                 model_name: ModelType = 'VGG-Facepip') -> list[str]:
         """
         Process the target images and save the results to a JSON file.
 

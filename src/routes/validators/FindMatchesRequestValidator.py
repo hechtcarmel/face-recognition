@@ -1,12 +1,15 @@
 from pydantic import BaseModel, field_validator
-from typing import List
+from typing import List, Optional
 import os
+
+from src.services.FaceRecognitionService import ModelType
 
 
 class FindMatchesRequestValidator(BaseModel):
     selfie_paths: List[str]
     folder_path: str
-    output_path: str = None
+    output_path: Optional[str] = None
+    model_name: ModelType = 'Facenet'
 
     # @field_validator('selfie_paths')
     # @classmethod

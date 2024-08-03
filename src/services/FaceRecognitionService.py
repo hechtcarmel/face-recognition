@@ -1,13 +1,20 @@
 import json
 import logging
-from typing import List, Set, Iterable
-from deepface import DeepFace
+import os
 from pathlib import Path
+from typing import List, Set, Iterable, Literal
+
+from deepface import DeepFace
+
+ModelType = Literal[
+    "VGG-Face", "Facenet", "Facenet512", "OpenFace", "DeepFace", "DeepID", "ArcFace", "Dlib", "SFace", "GhostFaceNet"]
 
 
 class FaceRecognitionService:
+
     @staticmethod
-    def process_and_save_results(selfie_paths: List[str], folder_path: str, output_path: str, model_name: str = 'VGG-Face') -> None:
+    def process_and_save_results(selfie_paths: List[str], folder_path: str, output_path: str,
+                                 model_name: ModelType = 'Facenet') -> list[str]:
         """
         Process the target images and save the results to a JSON file.
 
@@ -19,7 +26,11 @@ class FaceRecognitionService:
         logging.info(f"Processing target images: {selfie_paths}. Comparing with images in {folder_path}")
         matches = FaceRecognitionService._find_matches(selfie_paths, folder_path, model_name)
         FaceRecognitionService._write_results_to_json(matches, output_path)
+        logging.info(f"Mathces={output_path}")
+
         logging.info(f"Results written to {output_path}")
+        return list(matches)
+
 
     @staticmethod
     def _find_matches(selfie_paths: List[str], folder_path: str, model_name: str) -> Set[str]:
